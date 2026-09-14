@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LexAssist — Understand Your Legal Documents</title>
+  <meta name="description" content="Upload a legal document to get a plain-language summary, risk highlights, and grounded answers to your questions." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header>
+    <h1>LexAssist</h1>
+    <p class="tagline">Understand, compare, and prepare — before you sign.</p>
+  </header>
+
+  <main id="main-content">
+    <section aria-labelledby="disclaimer-heading" class="disclaimer" role="note">
+      <h2 id="disclaimer-heading" class="visually-hidden">Disclaimer</h2>
+      <p>
+        LexAssist explains legal documents in plain language. It does not
+        provide legal advice and does not replace a licensed attorney.
+      </p>
+    </section>
+
+    <section aria-labelledby="upload-heading">
+      <h2 id="upload-heading">1. Upload a document</h2>
+      <form id="upload-form">
+        <label for="file-input">Choose a legal document (.pdf, .docx, or .txt)</label>
+        <input
+          id="file-input"
+          name="file"
+          type="file"
+          accept=".pdf,.docx,.txt"
+          required
+          aria-describedby="upload-help"
+        />
+        <p id="upload-help" class="help-text">Maximum file size: 10&nbsp;MB.</p>
+        <button type="submit">Analyze document</button>
+      </form>
+      <p id="upload-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section aria-labelledby="summary-heading" id="summary-section" hidden>
+      <h2 id="summary-heading">2. Plain-language summary</h2>
+      <p id="summary-text"></p>
+      <p id="clause-count"></p>
+    </section>
+
+    <section aria-labelledby="ask-heading" id="ask-section" hidden>
+      <h2 id="ask-heading">3. Ask a question about this document</h2>
+      <form id="ask-form">
+        <label for="question-input">Your question</label>
+        <input
+          id="question-input"
+          name="question"
+          type="text"
+          maxlength="1000"
+          required
+          placeholder="e.g. Can my landlord enter without notice?"
+        />
+        <button type="submit">Ask</button>
+      </form>
+      <div id="answer-output" role="region" aria-live="polite" aria-label="Answer"></div>
+    </section>
+
+    <section aria-labelledby="actions-heading" id="actions-section" hidden>
+      <h2 id="actions-heading">4. Actionable outputs</h2>
+      <div class="action-buttons">
+        <button type="button" id="risk-button">Show risk highlights</button>
+        <button type="button" id="checklist-button">Generate checklist &amp; lawyer questions</button>
+      </div>
+      <div id="risk-output" role="region" aria-live="polite" aria-label="Risk report"></div>
+      <div id="checklist-output" role="region" aria-live="polite" aria-label="Checklist"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>LexAssist is an informational tool, not a law firm. For advice about your specific situation, consult a licensed attorney or local legal aid organization.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
