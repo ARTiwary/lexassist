@@ -135,6 +135,47 @@ python -m http.server 5173
 ```
 Open `http://localhost:5173`. Try uploading `sample_docs/sample_lease.txt`.
 
+### Deploying the backend to Render
+
+1. Create a new **Web Service** on Render, connected to this repo.
+2. **Root Directory**: leave blank (requirements.txt is at the repo root).
+3. **Build Command**: `pip install -r requirements.txt`
+4. **Start Command**: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+5. Under **Environment**, add:
+   ```
+   PYTHON_VERSION=3.11.9
+   USE_LIVE_LLM=true
+   GROQ_API_KEY=your_real_key
+   ALLOWED_ORIGINS=https://your-frontend.netlify.app
+   ```
+   `PYTHON_VERSION` must be set this way (a Render environment variable) --
+   Render does not read a `runtime.txt` file the way Heroku does. Pinning
+   it matters: some pinned dependencies here (e.g. `pydantic-core`) don't
+   yet ship prebuilt wheels for Render's newest default Python, which
+   forces a from-source Rust build that fails in Render's build sandbox.
+   `3.11.9` has known-good prebuilt wheels for every pinned dependency in
+   this project.
+
+### Frontend deployment (Netlify) — backend URL via environment variable
+
+The frontend never hardcodes a backend URL in source control. Instead:
+
+1. `frontend/config.template.js` contains a placeholder (`__API_BASE__`).
+2. `frontend/build.sh` (run automatically by Netlify per `netlify.toml`)
+   substitutes the `API_BASE` environment variable you set in the Netlify
+   dashboard into `frontend/config.js` at deploy time.
+3. Locally, `frontend/config.js` ships with no override, so `app.js`
+   falls back to `http://<hostname>:8000` automatically — no setup needed
+   for local development.
+
+To deploy: in Netlify → **Site configuration → Environment variables**,
+add
+```
+API_BASE=https://your-backend-name.onrender.com
+```
+then deploy/redeploy. Also add your Netlify site's URL to the backend's
+`ALLOWED_ORIGINS` on Render so CORS allows it.
+
 ### LLM provider: Groq
 ```bash
 # in .env
@@ -278,11 +319,15 @@ lexassist/
 ├── frontend/
 │   ├── index.html
 │   ├── styles.css
-│   └── app.js
+│   ├── app.js
+│   ├── config.js          # local-dev default (no backend URL committed)
+│   ├── config.template.js # used by build.sh to inject API_BASE on Netlify
+│   └── build.sh           # Netlify build step
 ├── tests/                 # 34 pytest tests
 ├── sample_docs/
 │   └── sample_lease.txt
 ├── requirements.txt
+├── netlify.toml            # Netlify build config for frontend/
 ├── .env.example
 └── README.md
 ```

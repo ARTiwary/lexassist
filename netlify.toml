@@ -1,0 +1,4 @@
+[build]
+  base = "frontend"
+  command = "sh build.sh"
+  publish = "."
