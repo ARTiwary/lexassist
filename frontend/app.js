@@ -7,6 +7,7 @@
 // so the API call's origin matches the page's origin as closely as
 // possible -- avoids a class of CORS mismatches in local development.
 const API_BASE = window.LEXASSIST_API_BASE || `http://${window.location.hostname}:8000`;
+console.log("[LexAssist] Using API_BASE:", API_BASE);
 
 let currentDocumentId = null;
 
@@ -62,7 +63,7 @@ uploadForm.addEventListener("submit", async (event) => {
     askSection.hidden = false;
     actionsSection.hidden = false;
   } catch (err) {
-    uploadStatus.textContent = `Could not reach the LexAssist server (${err.message}). Check that the backend is running on port 8000 and that this page's origin is in ALLOWED_ORIGINS.`;
+    uploadStatus.textContent = `Could not reach ${API_BASE} (${err.message}). Check the browser console for the specific cause (CORS, cold-start timeout, or wrong URL).`;
   }
 });
 
