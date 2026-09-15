@@ -1,13 +1,22 @@
-fastapi==0.115.0
-uvicorn[standard]==0.30.6
-pydantic==2.9.2
-python-multipart==0.0.9
-python-dotenv==1.0.1
-scikit-learn==1.5.2
-pdfplumber==0.11.4
-python-docx==1.1.2
-groq==0.11.0
+# Version floors rather than exact pins for the packages most likely to
+# need a matching prebuilt wheel for whatever Python version the host
+# platform picks (e.g. Render). Exact pins here previously caused a
+# production build failure: pydantic==2.9.2 has no prebuilt wheel for
+# Python 3.14 and falls back to compiling pydantic-core from Rust source,
+# which fails in sandboxed build environments with a read-only Cargo
+# cache. pydantic>=2.12 ships 3.14 wheels, so letting pip resolve the
+# newest compatible version avoids the problem regardless of which
+# Python version the deploy host defaults to.
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.6
+pydantic>=2.9.2
+python-multipart>=0.0.9
+python-dotenv>=1.0.1
+scikit-learn>=1.5.2
+pdfplumber>=0.11.4
+python-docx>=1.1.2
+groq>=0.11.0
 
 # Testing
-pytest==8.3.3
-httpx==0.27.2
+pytest>=8.3.3
+httpx>=0.27.2

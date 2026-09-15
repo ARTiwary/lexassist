@@ -31,7 +31,7 @@ class UnsupportedFileType(HTTPException):
 class FileTooLarge(HTTPException):
     def __init__(self, size: int):
         super().__init__(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            status_code=413,
             detail=(
                 f"File is {size} bytes, which exceeds the "
                 f"{settings.max_upload_bytes} byte limit."
